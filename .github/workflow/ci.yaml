@@ -1,8 +1,8 @@
 name: build
 
 on:
-  push:
-  
+  push:    
+
 jobs:
   build:
     runs-on: ubuntu-22.04
