@@ -29,5 +29,5 @@ jobs:
          push: true
          context: ./src
          file: ./src/Dockerfile
-         tags: nuttaporn1449/phoneshop:latest
+         tags: nuttaporn1449/phoneshop-catalog-wabapi:latest
          labels: ${{ steps.meta.outputs.labels }}
