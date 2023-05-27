@@ -27,7 +27,7 @@ jobs:
        uses: docker/build-push-action@v2
        with:         
          push: true
-         context: ./src
-         file: ./src/Dockerfile
+         context: .
+         file: ./Dockerfile
          tags: nuttaporn1449/phoneshop-catalog-wabapi:latest
          labels: ${{ steps.meta.outputs.labels }}
