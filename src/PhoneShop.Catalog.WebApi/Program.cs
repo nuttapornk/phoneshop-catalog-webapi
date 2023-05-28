@@ -1,11 +1,32 @@
-var builder = WebApplication.CreateBuilder(args);
+using PhoneShop.Catalog.WebApi.Data.Interfaces;
+using PhoneShop.Catalog.WebApi.Data;
+using PhoneShop.Catalog.WebApi.Repository;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
+var builder = WebApplication.CreateBuilder(args);
+var configure = builder.Configuration;
 // Add services to the container.
+
+builder.Services.AddScoped<ICatalogContext, CatalogContext>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Catalog",
+        Version = "v1",
+    });
+});
+
+builder.Services.AddHealthChecks()
+    .AddMongoDb(configure["DatabaseSettings:ConnectionString"], "MongoDB Health", HealthStatus.Degraded);
 
 var app = builder.Build();
 
@@ -16,12 +37,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
