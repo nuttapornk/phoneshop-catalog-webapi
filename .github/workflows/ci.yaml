@@ -29,5 +29,5 @@ jobs:
          push: true
          context: .
          file: ./Dockerfile
-         tags: nuttaporn1449/phoneshop-catalog-wabapi:latest
+         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}:latest
          labels: ${{ steps.meta.outputs.labels }}
