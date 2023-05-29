@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 var configure = builder.Configuration;
+
+configure.AddEnvironmentVariables();
+
 // Add services to the container.
 
 builder.Services.AddScoped<ICatalogContext, CatalogContext>();
@@ -25,8 +28,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 builder.Services.AddHealthChecks()
-    .AddMongoDb(configure["DatabaseSettings:ConnectionString"], "MongoDB Health", HealthStatus.Degraded);
+    .AddMongoDb(configure["MONGO_HOST"], "MongoDB Health", HealthStatus.Degraded);
 
 var app = builder.Build();
 

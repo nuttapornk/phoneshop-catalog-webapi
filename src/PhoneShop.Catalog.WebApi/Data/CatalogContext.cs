@@ -8,7 +8,9 @@ public class CatalogContext : ICatalogContext
 {
     public CatalogContext(IConfiguration configuration)
     {
-        var client = new MongoClient(configuration["DatabaseSettings:ConnectionString"]);
+        var mongoHost = configuration["MONGO_HOST"];
+
+        var client = new MongoClient(mongoHost);
         var database = client.GetDatabase(configuration["DatabaseSettings:DatabaseName"]);
 
         Propducts = database.GetCollection<Product>(configuration["DatabaseSettings:CollectionName"]);
